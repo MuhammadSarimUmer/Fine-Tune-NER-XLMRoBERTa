@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+
+# ---------------------------------------------------------------
+# Model weights and training outputs (about 1.1 GB per run; keep in
+# cloud storage or Git LFS, not in normal git)
+# ---------------------------------------------------------------
+outputs/
+**/best/
+**/checkpoints/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# ---------------------------------------------------------------
+# Third-party text data. Our data policy says we do NOT redistribute
+# scraped or downloaded text (Kaggle datasets, Wikipedia extracts,
+# court judgments, news). Rebuild it with the scripts instead.
+# ---------------------------------------------------------------
+datasets/
+data/raw/
+data/annotated/
+data/annotated_work/
+data/annotated_debug/
+data/dataset/
+data/splits/
+data/transformers/
+New Folder/
+
+# Real test sentences inside error dumps (metrics and reports stay)
+trained_reports/**/errors_*.txt
+
+# Model predictions and temporary Colab downloads
+predictions*.jsonl
+*.zip
+
+# ---------------------------------------------------------------
+# Editors, OS, secrets, logs
+# ---------------------------------------------------------------
+.vscode/
+.idea/
+.cursor/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+*.tmp
+.env
+.env.*
+*.key
+hf_token*
+
+# ---------------------------------------------------------------
+# Keep these on purpose (small and needed)
+# ---------------------------------------------------------------
+!data/gazetteers/
+!data/synthetic/
+!NER_Final_Report.pdf
+!report_assets/

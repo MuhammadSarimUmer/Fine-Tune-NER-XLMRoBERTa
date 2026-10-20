@@ -1,0 +1,11 @@
+errors_test.txt: 71 sentences with at least one error, 166 wrong tokens
+  token errors by kind: confusion 55, spurious 52, missed 43, boundary 16
+  missed (gold entity predicted O), by gold label: LAW_ACT 13, GOVERNMENT_BODY 10, LANDMARK_FACILITY 5, CITY 4, PERSON 3, ORGANIZATION 3, MONEY 3, DATE 2
+  spurious (gold O predicted entity), by predicted label: DATE 13, LAW_ACT 8, CITY 7, PERSON 7, GOVERNMENT_BODY 3, PROVINCE_REGION 3, COURT_LEGAL_BODY 3, POLITICAL_PARTY 2
+  most common confusions gold->pred: ORGANIZATION->GOVERNMENT_BODY 9, CITY->PERSON 7, LANDMARK_FACILITY->CITY 5, GOVERNMENT_BODY->PROVINCE_REGION 5, ORGANIZATION->POLITICAL_PARTY 4, GOVERNMENT_BODY->CITY 3, GOVERNMENT_BODY->COUNTRY 2, LANDMARK_FACILITY->PERSON 2, ORGANIZATION->COUNTRY 2, GOVERNMENT_BODY->PERSON 2
+
+errors_extra_test.txt: 45 sentences with at least one error, 137 wrong tokens
+  token errors by kind: confusion 65, missed 46, spurious 18, boundary 8
+  missed (gold entity predicted O), by gold label: EVENT 9, LAW_ACT 8, GOVERNMENT_BODY 8, CITY 4, MEDIA_OUTLET 3, LANDMARK_FACILITY 3, POLITICAL_PARTY 3, MONEY 2
+  spurious (gold O predicted entity), by predicted label: PERSON 6, DATE 4, LANDMARK_FACILITY 3, GOVERNMENT_BODY 2, TIME 1, COURT_LEGAL_BODY 1, POLITICAL_PARTY 1
+  most common confusions gold->pred: LANDMARK_FACILITY->CITY 6, ORGANIZATION->EDUCATIONAL_INSTITUTION 6, ORGANIZATION->GOVERNMENT_BODY 6, CITY->PERSON 5, ORGANIZATION->POLITICAL_PARTY 5, EDUCATIONAL_INSTITUTION->PERSON 4, EVENT->LAW_ACT 4, GOVERNMENT_BODY->ORGANIZATION 3, LAW_ACT->DATE 3, PROVINCE_REGION->CITY 3

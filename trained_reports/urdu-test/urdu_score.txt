@@ -1,0 +1,70 @@
+
+وزیراعظم شہباز شریف نے لاہور میں پاکستان تحریک انصاف کے رہنما عمران خان سے ملاقات کی۔
+  OK    PERSON                  شہباز شریف
+  OK    CITY                    لاہور
+  MISS  POLITICAL_PARTY         پاکستان تحریک انصاف
+  OK    PERSON                  عمران خان
+  EXTRA POLITICAL_PARTY         پاکستان
+  EXTRA SPORTS_TEAM             تحریک انصاف
+
+سپریم کورٹ آف پاکستان نے منگل کو انتخابی ایکٹ 2017 کے خلاف درخواست پر سماعت کی۔
+  OK    COURT_LEGAL_BODY        سپریم کورٹ آف پاکستان
+  MISS  DATE                    منگل
+  MISS  LAW_ACT                 انتخابی ایکٹ 2017
+  EXTRA DATE                    منگل کو
+  EXTRA LAW_ACT                 2017
+
+ڈان اور جیو نیوز کے مطابق حکومت نے سیلاب متاثرین کے لیے 25 ارب روپے مختص کیے۔
+  OK    MEDIA_OUTLET            ڈان
+  OK    MEDIA_OUTLET            جیو نیوز
+  OK    MONEY                   25 ارب روپے
+
+کراچی یونیورسٹی کے طلبہ نے 2 اکتوبر کو شام 4 بجے کراچی پریس کلب کے باہر احتجاج کیا۔
+  OK    EDUCATIONAL_INSTITUTION کراچی یونیورسٹی
+  MISS  DATE                    2 اکتوبر
+  OK    TIME                    شام 4 بجے
+  OK    LANDMARK_FACILITY       کراچی پریس کلب
+  EXTRA DATE                    2 اکتوبر کو
+
+پاکستان نے ایشیا کپ میں بھارت کو شکست دی اور بابر اعظم نے سنچری بنائی۔
+  OK    SPORTS_TEAM             پاکستان
+  OK    EVENT                   ایشیا کپ
+  OK    SPORTS_TEAM             بھارت
+  OK    PERSON                  بابر اعظم
+
+کوئٹہ، پشاور اور اسلام آباد میں مہنگائی 15 فیصد بڑھ گئی۔
+  OK    CITY                    کوئٹہ
+  OK    CITY                    پشاور
+  OK    CITY                    اسلام آباد
+  OK    PERCENT                 15 فیصد
+
+رابطے کے لیے 0300-1234567 پر کال کریں اور شناختی کارڈ نمبر 35202-1234567-1 بتائیں۔
+  OK    PHONE_NUMBER            0300-1234567
+  OK    ID_NUMBER               35202-1234567-1
+
+الیکشن کمیشن آف پاکستان نے خیبر پختونخوا اور بلوچستان میں انتخابات کا اعلان کیا۔
+  OK    GOVERNMENT_BODY         الیکشن کمیشن آف پاکستان
+  LABEL PROVINCE_REGION         خیبر پختونخوا (model: ['CITY'])
+  LABEL PROVINCE_REGION         بلوچستان (model: ['CITY'])
+  EXTRA CITY                    خیبر پختونخوا
+  EXTRA CITY                    بلوچستان
+
+TP 21 FP 7 FN 6  P 0.750 R 0.778 F1 0.764
+  CITY                    4/4
+  COURT_LEGAL_BODY        1/1
+  DATE                    0/2
+  EDUCATIONAL_INSTITUTION 1/1
+  EVENT                   1/1
+  GOVERNMENT_BODY         1/1
+  ID_NUMBER               1/1
+  LANDMARK_FACILITY       1/1
+  LAW_ACT                 0/1
+  MEDIA_OUTLET            2/2
+  MONEY                   1/1
+  PERCENT                 1/1
+  PERSON                  3/3
+  PHONE_NUMBER            1/1
+  POLITICAL_PARTY         0/1
+  PROVINCE_REGION         0/2
+  SPORTS_TEAM             2/2
+  TIME                    1/1

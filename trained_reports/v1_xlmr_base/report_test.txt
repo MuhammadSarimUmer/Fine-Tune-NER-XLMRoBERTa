@@ -1,0 +1,23 @@
+                           precision    recall  f1-score  support
+CITY                           0.781     0.735     0.758       34
+COUNTRY                        0.806     0.926     0.862       27
+COURT_LEGAL_BODY               0.818     0.900     0.857       10
+DATE                           0.758     0.877     0.813       57
+EDUCATIONAL_INSTITUTION        1.000     1.000     1.000        2
+EVENT                          1.000     1.000     1.000        3
+GOVERNMENT_BODY                0.750     0.679     0.713       53
+LANDMARK_FACILITY              0.667     0.250     0.364        8
+LAW_ACT                        0.412     0.583     0.483       12
+MEDIA_OUTLET                   1.000     0.833     0.909        6
+MONEY                          1.000     0.889     0.941        9
+ORGANIZATION                   0.636     0.350     0.452       20
+PERCENT                        1.000     1.000     1.000        5
+PERSON                         0.891     0.943     0.916      122
+POLITICAL_PARTY                0.846     0.917     0.880       36
+PROVINCE_REGION                0.773     1.000     0.872       17
+SPORTS_TEAM                    0.333     0.333     0.333        3
+TIME                           1.000     1.000     1.000        2
+-----------------------------------------------------------------
+micro avg                      0.805     0.826     0.816      426
+macro avg                      0.804     0.790     0.786      426
+weighted avg                   0.805     0.826     0.809      426

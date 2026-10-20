@@ -1,0 +1,131 @@
+Abbottabad
+Attock
+Awaran
+Badin
+Bahawalnagar
+Bahawalpur
+Bajaur
+Bannu
+Barkhan
+Bhakkar
+Buner
+Chagai
+Chakwal
+Charsadda
+Chiniot
+Chitral
+Dadu
+Dera Bugti
+Dera Ghazi Khan
+Dera Ismail Khan
+Faisalabad
+Fr Bannu
+Fr D.I.Khan
+Fr Kohat
+Fr Lakki Marwat
+Fr Peshawar
+Ghotki
+Gujranwala
+Gujrat
+Gwadar
+Hafizabad
+Hangu
+Haripur
+Harnai
+Hyderabad
+Jacobabad
+Jaffarabad
+Jamshoro
+Jhal Magsi
+Jhang
+Jhelum
+Kachhi
+Kalat
+Kambar Shahdad Kot
+Karachi Central
+Karachi East
+Karachi South
+Karachi West
+Karak
+Kashmore
+Kasur
+Kech
+Khairpur
+Khanewal
+Kharan
+Khushab
+Khuzdar
+Khyber
+Killa Abdullah
+Killa Saifullah
+Kohat
+Kohistan
+Kohlu
+Korangi
+Kurram
+Lahore
+Lakki Marwat
+Larkana
+Lasbela
+Layyah
+Lodhran
+Loralai
+Lower Dir
+Malir
+Mandi Bahauddin
+Mansehra
+Mardan
+Mastung
+Matiari
+Mianwali
+Mirpur Khas
+Mohmand
+Multan
+Musakhel
+Muzaffargarh
+Nankana Sahib
+Narowal
+Nasirabad
+Naushahro Feroze
+North Waziristan
+Nowshera
+Nushki
+Okara
+Orakzai
+Pakpattan
+Panjgur
+Peshawar
+Pishin
+Quetta
+Rahim Yar Khan
+Rajanpur
+Rawalpindi
+Sahiwal
+Sanghar
+Sargodha
+Shaheed Benazirabad
+Shangla
+Sheikhupura
+Sherani
+Shikarpur
+Sialkot
+Sibi
+Sohbatpur
+South Waziristan
+Sujawal
+Sukkur
+Swabi
+Swat
+Tando Allahyar
+Tando Muhammad Khan
+Tank
+Tharparkar
+Thatta
+Toba Tek Singh
+Torghar
+Umer Kot
+Upper Dir
+Vehari
+Washuk
+Zhob
+Ziarat

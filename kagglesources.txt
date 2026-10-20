@@ -1,0 +1,8 @@
+https://www.kaggle.com/datasets/zusmani/pakistan-news-headlines
+https://www.kaggle.com/datasets/mabdullahsajid/population-of-pakistan-dataset
+https://www.kaggle.com/datasets/jammazhar/imran-khan-pti-pakistan
+https://www.kaggle.com/datasets/tejasurya/t20-cricket-world-cup-indvspak-tweets-2022
+https://www.kaggle.com/datasets/zincly/pakistan-news-articles-2013-and-2018
+https://www.kaggle.com/datasets/mnaufil/latest-reddit-activity-about-imran-khan
+https://www.kaggle.com/datasets/shanza30/pakistan-penal-code-sections-for-llm-training
+By source: Dawn 3,500, Tribune 3,500, Supreme Court 3,500, Wikipedia 2,506, headlines 1,928, penal code 250 and Wikinews 206.
