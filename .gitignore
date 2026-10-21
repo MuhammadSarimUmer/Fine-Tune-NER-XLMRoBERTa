@@ -24,7 +24,7 @@ outputs/
 *.pth
 *.ckpt
 *.onnx
-
+# student_pack: scripts and organiser samples are tracked; weights live under **/best/ (ignored above)
 # ---------------------------------------------------------------
 # Third-party text data. Our data policy says we do NOT redistribute
 # scraped or downloaded text (Kaggle datasets, Wikipedia extracts,

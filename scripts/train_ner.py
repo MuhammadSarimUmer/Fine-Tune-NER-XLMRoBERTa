@@ -189,7 +189,7 @@ def main():
     if a.smoke:
         random.Random(0).shuffle(train); train, val, a.epochs = train[:300], val[:60], 1
     # oversample the small, high-quality human-verified part of the training set
-    rep = {"human_review": a.human_x, "assistant_extra": a.assistant_x}
+    rep = {"human_review": a.human_x, "human_batch3": a.human_x, "assistant_extra": a.assistant_x}
     train = [r for r in train for _ in range(rep.get(r["origin"], 1))]
     random.Random(a.seed).shuffle(train)
     print(f"train {len(train)}  validation {len(val)}  test {len(test)}  extra_test {len(extra)}")
@@ -243,3 +243,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

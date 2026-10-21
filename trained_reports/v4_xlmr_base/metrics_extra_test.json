@@ -1,0 +1,160 @@
+{
+  "CITY": {
+    "precision": 0.7777777777777778,
+    "recall": 0.875,
+    "f1-score": 0.823529411764706,
+    "support": 32,
+    "predicted": 36
+  },
+  "COUNTRY": {
+    "precision": 0.8461538461538461,
+    "recall": 1.0,
+    "f1-score": 0.9166666666666666,
+    "support": 11,
+    "predicted": 13
+  },
+  "COURT_LEGAL_BODY": {
+    "precision": 0.75,
+    "recall": 0.6,
+    "f1-score": 0.6666666666666665,
+    "support": 5,
+    "predicted": 4
+  },
+  "DATE": {
+    "precision": 0.8888888888888888,
+    "recall": 1.0,
+    "f1-score": 0.9411764705882353,
+    "support": 40,
+    "predicted": 45
+  },
+  "EDUCATIONAL_INSTITUTION": {
+    "precision": 0.9166666666666666,
+    "recall": 0.9166666666666666,
+    "f1-score": 0.9166666666666666,
+    "support": 12,
+    "predicted": 12
+  },
+  "EVENT": {
+    "precision": 0.9285714285714286,
+    "recall": 0.8666666666666667,
+    "f1-score": 0.896551724137931,
+    "support": 15,
+    "predicted": 14
+  },
+  "GOVERNMENT_BODY": {
+    "precision": 0.8333333333333334,
+    "recall": 0.8571428571428571,
+    "f1-score": 0.8450704225352113,
+    "support": 35,
+    "predicted": 36
+  },
+  "ID_NUMBER": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "LANDMARK_FACILITY": {
+    "precision": 0.7777777777777778,
+    "recall": 0.7777777777777778,
+    "f1-score": 0.7777777777777778,
+    "support": 18,
+    "predicted": 18
+  },
+  "LAW_ACT": {
+    "precision": 0.38095238095238093,
+    "recall": 0.5333333333333333,
+    "f1-score": 0.4444444444444444,
+    "support": 15,
+    "predicted": 21
+  },
+  "MEDIA_OUTLET": {
+    "precision": 1.0,
+    "recall": 0.9411764705882353,
+    "f1-score": 0.9696969696969697,
+    "support": 17,
+    "predicted": 16
+  },
+  "MONEY": {
+    "precision": 0.5,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.5714285714285715,
+    "support": 3,
+    "predicted": 4
+  },
+  "ORGANIZATION": {
+    "precision": 0.5,
+    "recall": 0.2857142857142857,
+    "f1-score": 0.36363636363636365,
+    "support": 14,
+    "predicted": 8
+  },
+  "PERCENT": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "PERSON": {
+    "precision": 0.8387096774193549,
+    "recall": 0.9811320754716981,
+    "f1-score": 0.9043478260869565,
+    "support": 53,
+    "predicted": 62
+  },
+  "PHONE_NUMBER": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "POLITICAL_PARTY": {
+    "precision": 0.8387096774193549,
+    "recall": 0.8387096774193549,
+    "f1-score": 0.8387096774193549,
+    "support": 31,
+    "predicted": 31
+  },
+  "PROVINCE_REGION": {
+    "precision": 0.9,
+    "recall": 0.75,
+    "f1-score": 0.8181818181818182,
+    "support": 12,
+    "predicted": 10
+  },
+  "SPORTS_TEAM": {
+    "precision": 0.9230769230769231,
+    "recall": 0.9230769230769231,
+    "f1-score": 0.9230769230769231,
+    "support": 13,
+    "predicted": 13
+  },
+  "TIME": {
+    "precision": 0.9090909090909091,
+    "recall": 0.8333333333333334,
+    "f1-score": 0.8695652173913043,
+    "support": 12,
+    "predicted": 11
+  },
+  "micro avg": {
+    "precision": 0.8163841807909604,
+    "recall": 0.8550295857988166,
+    "f1-score": 0.8352601156069365,
+    "support": 338
+  },
+  "macro avg": {
+    "precision": 0.7946887815958025,
+    "recall": 0.8027292196386941,
+    "f1-score": 0.7933643304803863,
+    "support": 338
+  },
+  "weighted avg": {
+    "precision": 0.819444865011767,
+    "recall": 0.8550295857988166,
+    "f1-score": 0.8330843682948644,
+    "support": 338
+  }
+}

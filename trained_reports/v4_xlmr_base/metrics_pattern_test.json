@@ -1,0 +1,160 @@
+{
+  "CITY": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 44,
+    "predicted": 44
+  },
+  "COUNTRY": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "COURT_LEGAL_BODY": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "DATE": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 6
+  },
+  "EDUCATIONAL_INSTITUTION": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "EVENT": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "GOVERNMENT_BODY": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "ID_NUMBER": {
+    "precision": 0.81,
+    "recall": 0.9642857142857143,
+    "f1-score": 0.8804347826086957,
+    "support": 84,
+    "predicted": 100
+  },
+  "LANDMARK_FACILITY": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "LAW_ACT": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "MEDIA_OUTLET": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "MONEY": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "ORGANIZATION": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "PERCENT": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "PERSON": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 52,
+    "predicted": 52
+  },
+  "PHONE_NUMBER": {
+    "precision": 0.9805825242718447,
+    "recall": 0.9901960784313726,
+    "f1-score": 0.9853658536585367,
+    "support": 102,
+    "predicted": 103
+  },
+  "POLITICAL_PARTY": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "PROVINCE_REGION": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "SPORTS_TEAM": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "TIME": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0,
+    "predicted": 0
+  },
+  "micro avg": {
+    "precision": 0.9114754098360656,
+    "recall": 0.9858156028368794,
+    "f1-score": 0.9471890971039182,
+    "support": 282
+  },
+  "macro avg": {
+    "precision": 0.9476456310679612,
+    "recall": 0.9886204481792717,
+    "f1-score": 0.9664501590668081,
+    "support": 282
+  },
+  "weighted avg": {
+    "precision": 0.9363809130344971,
+    "recall": 0.9858156028368794,
+    "f1-score": 0.9590916269939758,
+    "support": 282
+  }
+}

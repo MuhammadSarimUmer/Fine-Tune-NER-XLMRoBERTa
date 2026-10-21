@@ -22,6 +22,7 @@ from normalize_conventions import normalize
 from mask_unlabelled import unlabelled_name_mask
 from labels import LABELS
 
+USE_BATCH3 = True             # round 3 (Step 35): add the human-verified batch-3 sentences to training
 MASK_UNLABELLED = True        # round 2 (Step 21); set False to rebuild the round-1 dataset
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -63,6 +64,10 @@ for t in json.load(open(ANN / "labelstudio_tasks_extra_assistant.json", encoding
     toks, tags = spans_to_bio(t["data"]["text"], spans)
     extra_train.append(dict(id=t["data"]["id"], text=t["data"]["text"], tokens=toks, ner_tags=tags,
                             source=t["data"]["source"], group=t["data"]["group"]))
+# batch 3 (round 3, Step 35): human-verified, TRAINING ONLY. Set USE_BATCH3 = False to rebuild the v1-v3 dataset.
+batch3 = read(ANN / "corrected_batch3_final.jsonl") if USE_BATCH3 else []
+assert not {r["group"] for r in batch3} & (test_groups | extra_test_groups), "batch3 shares a document with a test set"
+assert not {r["id"] for r in batch3} & {r["id"] for r in test + extra_test}, "batch3 id is a test id"
 assert len(test) == 200 and len(review) == 200 and len(extra_test) == 100 and len(extra_train) == 200
 
 # ---------------------------------------------------------------- 1. exclude test DOCUMENTS from training
@@ -72,7 +77,7 @@ assert held_groups <= (test_groups | extra_test_groups) | held_groups
 say("== leakage control ==")
 say(f"test documents: {len(held_groups & test_groups)} (random test) + {len(held_groups & extra_test_groups)} (extra test)")
 
-human_ids = {r["id"] for r in human + extra_test + extra_train}    # never use the silver version of these
+human_ids = {r["id"] for r in human + extra_test + extra_train + batch3}    # never use the silver version of these
 pool, dropped = [], Counter()
 for r in silver:
     if r["id"] in human_ids: dropped["silver copy of a human/assistant sentence"] += 1; continue
@@ -89,6 +94,7 @@ for r in silver:
     pool.append(row(r, "silver_trusted" if r["trusted"] else "silver_masked", ign))
 for r in review: pool.append(row(r, "human_review"))
 for r in extra_train: pool.append(row(r, "assistant_extra"))
+for r in batch3: pool.append(row(r, "human_batch3"))
 say("removed from silver:", dict(dropped))
 
 # ---------------------------------------------------------------- 2. near-duplicate check vs both test sets

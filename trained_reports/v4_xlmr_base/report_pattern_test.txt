@@ -1,0 +1,25 @@
+                           precision    recall  f1-score  support
+CITY                           1.000     1.000     1.000       44
+COUNTRY                          n/a       n/a       n/a        0   (no examples in this test set)
+COURT_LEGAL_BODY                 n/a       n/a       n/a        0   (no examples in this test set)
+DATE                           0.000     0.000     0.000        0
+EDUCATIONAL_INSTITUTION          n/a       n/a       n/a        0   (no examples in this test set)
+EVENT                            n/a       n/a       n/a        0   (no examples in this test set)
+GOVERNMENT_BODY                  n/a       n/a       n/a        0   (no examples in this test set)
+ID_NUMBER                      0.810     0.964     0.880       84
+LANDMARK_FACILITY                n/a       n/a       n/a        0   (no examples in this test set)
+LAW_ACT                          n/a       n/a       n/a        0   (no examples in this test set)
+MEDIA_OUTLET                     n/a       n/a       n/a        0   (no examples in this test set)
+MONEY                            n/a       n/a       n/a        0   (no examples in this test set)
+ORGANIZATION                     n/a       n/a       n/a        0   (no examples in this test set)
+PERCENT                          n/a       n/a       n/a        0   (no examples in this test set)
+PERSON                         1.000     1.000     1.000       52
+PHONE_NUMBER                   0.981     0.990     0.985      102
+POLITICAL_PARTY                  n/a       n/a       n/a        0   (no examples in this test set)
+PROVINCE_REGION                  n/a       n/a       n/a        0   (no examples in this test set)
+SPORTS_TEAM                      n/a       n/a       n/a        0   (no examples in this test set)
+TIME                             n/a       n/a       n/a        0   (no examples in this test set)
+-----------------------------------------------------------------
+micro avg                      0.911     0.986     0.947      282
+macro avg                      0.948     0.989     0.966      282
+weighted avg                   0.936     0.986     0.959      282

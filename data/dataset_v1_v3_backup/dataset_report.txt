@@ -1,0 +1,36 @@
+== leakage control ==
+test documents: 196 (random test) + 100 (extra test)
+removed from silver: {'sibling from a test document': 965, 'tokens masked as unlabelled names': 3449, 'silver copy of a human/assistant sentence': 300}
+removed as near-duplicates of test sentences: {'shares an 8-word span with a test sentence': 64}
+ALL LEAKAGE ASSERTIONS PASSED (disjoint document groups, no test ids/texts in train, no near-duplicates)
+
+== sizes ==
+train        19115 sentences    7159 groups  origins {'silver_trusted': 9516, 'silver_masked': 2974, 'human_review': 186, 'assistant_extra': 179, 'synthetic': 6260}
+validation    1206 sentences     600 groups  origins {'silver_trusted': 919, 'silver_masked': 254, 'human_review': 13, 'assistant_extra': 20}
+test           200 sentences     196 groups  origins {'human_test': 200}
+extra_test     100 sentences     100 groups  origins {'human_extra_test': 100}
+
+== entity counts per label (B- tags, masked tokens not counted) ==
+label                      train   valid   test  extra
+PERSON                      8915     717    122     53
+CITY                        3793     260     34     32
+PROVINCE_REGION             1693     121     17     12
+COUNTRY                     2146     177     27     11
+LANDMARK_FACILITY            700      13      8     18
+GOVERNMENT_BODY             2314     142     53     35
+POLITICAL_PARTY             3555     336     36     31
+ORGANIZATION                 807      11     20     14
+EDUCATIONAL_INSTITUTION      424       4      2     12
+COURT_LEGAL_BODY            1517      88     10      5
+LAW_ACT                     1523      82     12     15
+EVENT                        553      23      3     15
+MEDIA_OUTLET                 590      18      6     17
+SPORTS_TEAM                  919      29      3     13
+DATE                        5533     371     57     40
+TIME                         557       6      2     12
+MONEY                        815      23      9      3
+PERCENT                      542      16      5      0
+PHONE_NUMBER                 556       0      0      0
+ID_NUMBER                    444       0      0      0
+
+masked tokens in train (ignored by the loss): 11344

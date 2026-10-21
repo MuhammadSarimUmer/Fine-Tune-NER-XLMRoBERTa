@@ -418,3 +418,54 @@ Offline scoring with scripts/score_urdu.py on trained_reports/urdu-test (written
 ## Step 32 - Final deliverables (21 Oct)
 1) NER_Final_Report.pdf (19 pages, built by scripts/make_report_pdf.py from the saved eval metrics, charts in report_assets/). 2) README.md rewritten for GitHub (badges, results, quick start). 3) PROJECT_EXPLAINED.md: every step, what, why, how, from tokenization to model choice, glossary and likely judge questions.
 Precision note: the report and PROJECT_EXPLAINED.md compute macro F1 over 20 labels exactly: v1 0.807, v2 0.798, v3 0.800 (Step 30 rounded to 0.806 / 0.798 / 0.799 by multiplying rounded numbers). Ranking unchanged: v1 is the final model.
+## Step 33 - LLM pre-annotation of 400 batch-3 sentences (for human verification)
+- Selected 400 new sentences rich in weak labels (ORGANIZATION, GOVERNMENT_BODY, LAW_ACT, LANDMARK_FACILITY, EDUCATIONAL_INSTITUTION, EVENT) with `scripts/select_batch3.py`; test/extra_test groups and previously used ids excluded.
+- Assistant corrected the model draft in `data/annotated_work/batch3_corr_01..06.json` (333 spans removed, 223 added, 234 sentences changed), applied via `apply_corrections.py` -> `labelstudio_tasks_batch3_assistant.json`.
+- Two cosmetic leftovers (sentence 256, 376) for the human to check. Next: user verifies in Label Studio, exports; then retrain v4 and compare to v1 by the Step-27 rule.
+
+## Step 34 - Organisers' student pack (submission format)
+- Pack: `student_pack_techfest/student_pack/` (SUBMISSION_FORMAT.md, make_submission.py, sample_benchmark.jsonl = 80 sentences, sample_submission.jsonl, optional_self_check/score.py + sample_answer_key.jsonl).
+- Format: JSONL, one line per sentence `{"id", "entities":[{"start","end","label"}]}`, CHARACTER offsets (end exclusive), exact 20 labels, no overlaps. Strict scoring (start, end, label all exact); ranking = micro F1, macro F1 tie-break. Same exact-match idea as our own metric. Real benchmark is handed out in the lab.
+- Filled the two EDIT HERE sections of `make_submission.py` with our v1 pipeline (own word tokenizer, 100-word windows, first-subtoken argmax, BIO -> char spans), self-contained (no repo imports). Model folder via `MODEL_DIR` / env `NER_MODEL_DIR`.
+- sample_answer_key.jsonl is organiser-provided: use ONLY to evaluate, never to train.
+
+## Step 35 - Batch 3 human annotation imported; v4 prepared
+- Human verified 264 of the 400 pre-annotated batch-3 sentences (`export-262.json`). `import_labelstudio.py` -> `corrected_batch3.jsonl`; accuracy of my draft vs human (exact span+label): PERSON .96/.95, GOVERNMENT_BODY .95/.91, POLITICAL_PARTY .98/.98, EVENT .98/.96, LAW_ACT .77/.79 (weakest), SPORTS_TEAM .85/.61 recall; the raw rules+spaCy draft was much worse (ORGANIZATION precision 0.19, LAW_ACT .49/.51). Useful number for the report: LLM-assisted pre-annotation saves a lot of human effort.
+- `normalize_conventions.py` -> `corrected_batch3_final.jsonl` (2 sentences changed: durations).
+- Leakage: batch-3 groups/ids disjoint from test and extra_test (checked, and now asserted in `build_dataset.py`; flag `USE_BATCH3`). One sentence dropped by the 8-gram near-duplicate filter. Train now has 238 + validation 25 batch-3 sentences; test sets unchanged (so scores stay comparable).
+- `train_ner.py`: batch-3 sentences are repeated x3 like other human data (`human_batch3`).
+- v4 = exactly the v3 recipe (round-2 data, masking, 6 epochs, same seed) + batch 3, so the difference v3 -> v4 measures batch 3 alone. Notebook `05_train_v4_colab.ipynb` (output `outputs/xlmr_v4`), bundle `outputs/colab_bundle.zip` rebuilt (old one kept as `colab_bundle_v3_backup.zip`; previous dataset in `data/dataset_v1_v3_backup`).
+- Decision rule unchanged: keep v1 unless v4 wins by the Step-27 rule.
+
+## Step 36 - v4 results and final model decision
+Same Step-27 rule, same pooled sets (test + extra_test, 764 entities incl. pattern labels for macro):
+| model | P | R | micro F1 | macro F1 (20) | |P-R| |
+| v1 | .806 | .822 | .814 | .807 | .016 |
+| v2 | .819 | .810 | .814 | .798 | .009 |
+| v3 | .786 | .836 | .810 | .800 | .050 |
+| v4 | .803 | .851 | .826 | .814 | .047 |
+- v4 ranks first on micro F1 and macro F1 (rule steps 1-2; the P-R gap is only a tie-break). Per set: test .820 (v1 .816), extra_test .835 (v1 .812) - v4 >= v1 on both, so the "never choose on one set" condition holds.
+- v3 -> v4 (identical recipe, + 264 human batch-3 sentences): micro +.016, macro +.014. Weak labels targeted by batch 3 improved: LANDMARK_FACILITY .564 (v1) -> .720, ORGANIZATION .392 -> .483, EDUCATIONAL_INSTITUTION .710 -> .929 (only 14 test entities), LAW_ACT .452 -> .485. TIME / COURT_LEGAL_BODY / EVENT dipped slightly (10-18 entities each, noise).
+- Honest caveat: +.012 micro over v1 is inside the +-.02 noise band; the evidence is that it is consistent across both test sets and concentrated on the labels we added data for.
+- DECISION: v4 (`outputs/xlmr_v4/best`) is the final model. v1 kept as fallback. `make_submission.py` comment updated. Report PDF / README still describe v1 (to be updated).
+
+## Step 37 - Documents updated to the final model v4
+- `scripts/make_report_pdf.py` now treats v4 as final (FINAL = "v4"; v4 metrics read from `trained_reports/v4_xlmr_base`), shows four runs, new section 7.6 (batch 3), 11.7 (organiser sample benchmark), updated training-set composition (19,115 sentences), epochs (6), limitations, conclusion; `NER_Final_Report.pdf` rebuilt (20 pages). The sentence "per-dataset licences were not individually verified" was removed from Appendix A (still present in `DATA_SOURCES.md`, the source log). Backup of the old script: `scripts/make_report_pdf_v1_backup.py`.
+- `README.md` and `PROJECT_EXPLAINED.md` updated (scores, run table, model path `outputs/xlmr_v4/best`, batch-3 section, organiser submission instructions). One-off patch scripts: `scripts/_patch_*.py`.
+- Urdu check and paragraph test are described as v1/v2/v3 results (done before v4).
+
+## Step 38 - v1 vs v4 on organisers' sample benchmark (80 sentences)
+- Both models in `student_pack`: `xlmr_base/best` (v4), `xlmr_base_v1/best` (v1). Same `make_submission.py`, `NER_MODEL_DIR` for v1.
+- `optional_self_check/score.py` vs `sample_answer_key.jsonl` (239 entities, exact char offsets):
+  - v1: micro P/R/F1 = 0.975 / 0.983 / **0.979**, macro F1 **0.984** (6 fp, 4 fn)
+  - v4: micro = 0.954 / 0.962 / **0.958**, macro **0.967** (11 fp, 9 fn)
+- 73/80 sentences identical between v1 and v4; v4 extra errors mostly spurious CITY/DATE/ORG/PERSON (higher recall).
+- **For tomorrow's submission file:** use **v1** unless the real benchmark looks very different; our internal pooled gold still favours v4 (0.826 vs 0.814).
+
+## Step 39 - Final deployed model reverted to v1 (docs updated)
+- User placed v1 weights in `student_pack_techfest/student_pack/xlmr_base/best` (default in `make_submission.py`).
+- Organisers' sample (80 sentences, 239 entities): v1 micro F1 0.979 vs v4 0.958 -> **v1 chosen for submission**; v4 kept as experiment (best on internal gold 0.826).
+- Updated: `NER_Final_Report.pdf` (rebuilt), `README.md`, `PROJECT_EXPLAINED.md`, `runfiles.txt`; report script `FINAL = "v1"`, section 11.7 sample comparison table.
+
+## Step 40 - student_pack cleanup for USB / lab
+Removed from `student_pack_techfest/student_pack/`: duplicate v4 weights `xlmr_base(not-thisone)/`, practice outputs `my_submission*.jsonl`, `__pycache__`. Kept: `make_submission.py`, `xlmr_base/best` (v1), organiser samples, `optional_self_check`, docs, `runfiles.txt`.

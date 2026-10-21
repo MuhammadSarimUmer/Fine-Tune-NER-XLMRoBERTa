@@ -403,30 +403,35 @@ Why: one overall number says nothing about *where* the model fails, and the cure
 
 **What happened.** Round 2 moved errors from *missed* (74 to 43 on the random test) to *spurious* (29 to 52) and *confusion*. Net F1 change was within noise.
 
-## F6. Results of the three runs and the honest conclusion
+**Round 3 (v4), more human labels (Step 33-36).** Rounds 1 and 2 only re-processed the same noisy labels. Round 3 added real human work: 400 new sentences rich in the weak types (ORGANIZATION, GOVERNMENT_BODY, LAW_ACT, LANDMARK_FACILITY, EDUCATIONAL_INSTITUTION, EVENT) were selected one per document, never from a test document (`scripts/select_batch3.py`). An AI assistant corrected the drafts (`batch3_corr_01..06.json`, applied by `apply_corrections.py`: 333 spans removed, 223 added); a human then verified **264** of them in Label Studio. These were imported (`import_labelstudio.py`), normalised (`normalize_conventions.py`, 2 sentences changed) and added to training only (repeated x3 like other human data; flag `USE_BATCH3` in `build_dataset.py`). Leakage was checked three ways: document groups and ids disjoint from both test sets (now asserted in the build), no identical text, and only common phrases ("Election Commission of Pakistan (ECP)", "according to an MQM press release") shared with test sentences. v4 uses exactly the v3 recipe, so v3 vs v4 isolates the effect of the human data.
+
+How good was the assistant draft against the human (exact span and label, precision / recall)? PERSON 0.96 / 0.95, GOVERNMENT_BODY 0.95 / 0.91, POLITICAL_PARTY 0.98 / 0.98, EVENT 0.98 / 0.96, LAW_ACT 0.77 / 0.79 (weakest), SPORTS_TEAM 0.85 / 0.61. The raw rules+spaCy draft was far lower (ORGANIZATION precision 0.19, LAW_ACT 0.49 / 0.51): LLM-assisted pre-annotation saves a lot of human effort.
+
+## F6. Results of the four runs and the honest conclusion
 
 | Run | Micro P | Micro R | Micro F1 | Macro F1 (20 labels) |
 |---|---|---|---|---|
 | v1 | 0.806 | 0.822 | 0.814 | 0.807 |
 | v2 | 0.819 | 0.810 | 0.814 | 0.798 |
 | v3 | 0.786 | 0.836 | 0.810 | 0.800 |
+| v4 (experiment) | 0.803 | 0.851 | **0.826** | **0.814** |
 
 (Macro values computed exactly by the report script; the earlier log entry rounded them as 0.806 / 0.798 / 0.799 - the ranking is the same.)
 
-**Conclusion.** The three runs tie. Both rounds changed the *kind* of error but not the total. What limits the score is **label quality** (few human labels for ORGANIZATION, GOVERNMENT_BODY, LAW_ACT, and real ambiguity between ORGANIZATION and GOVERNMENT_BODY), not model size or training length.
+**Conclusion.** v1, v2 and v3 tie on internal gold. v4 adds human-verified labels and reaches micro F1 0.826 (+0.012 over v1, inside noise), with gains on weak types but more spurious predictions. **Deployed final model: v1** — on the organisers' sample benchmark (80 sentences, their scorer), v1 micro F1 **0.979** vs v4 **0.958**, so `make_submission.py` uses `xlmr_base/best` (v1 weights). What limits the score is **label quality**, not model size.
 
-## F7. How the final model was chosen
+## F7. How the final model was chosen (rule and decision)
 
-First we noticed our own earlier mistakes: a claim "v2 is best" over-read noise (+0.009 on one set), and a pick of v3 because only v3 had pattern-test numbers (a gap in verification, not in quality). The fix was a **rule fixed in advance**, applied to all three models scored by the same code on the same data (`--eval_only` mode):
+First we noticed our own earlier mistakes: a claim "v2 is best" over-read noise (+0.009 on one set), and a pick of v3 because only v3 had pattern-test numbers (a gap in verification, not in quality). The fix was a **rule fixed in advance**, applied to all models scored by the same code on the same data (`--eval_only` mode):
 
 1. pooled micro F1 over both human test sets;
 2. among ties, best macro F1 over all 20 labels (18 human-tested + PHONE_NUMBER and ID_NUMBER from the pattern test);
 3. tie-break: smallest |precision - recall| gap;
 4. never choose on one set or on one label.
 
-Step 1 tie (0.814 / 0.814 / 0.810). Step 2: **v1 0.807** vs v3 0.800 vs v2 0.798. **v1 is the final model** and also the simplest. (A re-score of v3 reproduced its original numbers exactly, so scoring is reproducible.)
+Internal rule on four models: v4 ranks first on pooled gold (micro 0.826, macro 0.814). For the TechFest **submission file** we added a second check: both models on the organisers' sample with `optional_self_check/score.py`. **v1 wins (0.979 vs 0.958 micro F1)** — fewer spurious CITY/DATE/ORG spans. **v1 is the final deployed model**; v4 remains documented as an experiment.
 
-**Label bands (final model, 20 labels).** F1 at least 0.90: 6; at least 0.80: 14; at least 0.70: 17; below 0.60: 3 (ORGANIZATION, LAW_ACT, LANDMARK_FACILITY). Bands are descriptive; small supports can move a label across a line.
+**Label bands (final model v1, 20 labels).** F1 at least 0.90: 6; at least 0.80: 14; below 0.60: 3 (ORGANIZATION, LAW_ACT, LANDMARK_FACILITY).
 
 **Paragraph test.** All 20 types in one long paragraph: 50 of 54 predicted entities identical across v1, v2, v3. Differences: only v1 found "Dawn"; v2 cut "Anwaar-ul-Haq Kakar"; v1 called "Karachi Press Club" MEDIA_OUTLET (v2/v3 said LANDMARK_FACILITY, correct); all three cut "Bilawal Bhutto Zardari" to two words. A sanity check, not a score.
 
@@ -438,11 +443,11 @@ Step 1 tie (0.814 / 0.814 / 0.810). Step 2: **v1 0.807** vs v3 0.800 vs v2 0.798
 
 `python scripts/predict.py --model outputs/xlmr_base/best --text "..."` or `--input file.txt|.jsonl --out predictions.jsonl`.
 
-How: (1) cut the text into words with our word tokenizer, (2) run the model in windows of 100 words (so long texts fit), (3) take each word's tag from its first piece, (4) `fix_bio` repairs an `I-X` that has no `B-X` before it, (5) `tags_to_entities` turns tags into character spans. Output per input: `id`, `text`, `entities` (text, label, start, end), `tokens`, `tags`. The benchmark's required format is unknown; adapt the output writer when the organisers publish it.
+How: (1) cut the text into words with our word tokenizer, (2) run the model in windows of 100 words (so long texts fit), (3) take each word's tag from its first piece, (4) `fix_bio` repairs an `I-X` that has no `B-X` before it, (5) `tags_to_entities` turns tags into character spans. Output per input: `id`, `text`, `entities` (text, label, start, end), `tokens`, `tags`. The organisers' required format is JSONL with character offsets; their script `student_pack_techfest/student_pack/make_submission.py` has our model filled in (same steps as `predict.py`, self-contained). Rules: exactly the 20 labels, no overlaps, end exclusive, strict exact match, micro F1 ranks (macro F1 tie-break). The 80-sentence `sample_benchmark.jsonl` with `sample_answer_key.jsonl` is used only for scoring, never training. v1 scored 0.979 micro F1 on that sample; v4 scored 0.958.
 
 ## G2. Urdu (zero-shot)
 
-The organisers said Urdu may earn extra points. We did **not** train on Urdu, but XLM-RoBERTa saw Urdu in pretraining, so we ran the final model on 8 hand-written Urdu sentences with 27 expected entities (`notebooks/04_urdu_check_v1.ipynb`, scored offline by `scripts/score_urdu.py`).
+The organisers said Urdu may earn extra points. We did **not** train on Urdu, but XLM-RoBERTa saw Urdu in pretraining, so we ran the first model (v1; the check predates v4) on 8 hand-written Urdu sentences with 27 expected entities (`notebooks/04_urdu_check_v1.ipynb`, scored offline by `scripts/score_urdu.py`).
 
 Result: **21 of 27 found with the right type** (precision 0.750, recall 0.778, F1 0.764). Perfect for PERSON, CITY, MEDIA_OUTLET, SPORTS_TEAM, PHONE, ID, MONEY, PERCENT, TIME, EVENT and others. Misses are mostly *boundary* errors from Urdu grammar (the postposition "ko" attached to a date; a law name cut to its year; a party name split in two) and two province names tagged CITY.
 
@@ -459,7 +464,7 @@ Caveats: 27 entities written by us, not checked by a native annotator, no Urdu t
 | Google Drive | storing models | Colab storage is erased after each session |
 | matplotlib + reportlab | charts and PDF | `scripts/make_report_pdf.py` rebuilds the report from saved metrics |
 
-Notebooks: `01_preannotation_colab` (drafts), `02_train_colab` (train and evaluate), `03_eval_predict_all_models` (re-score all runs, paragraph test), `04_urdu_check_v1`.
+Notebooks: `01_preannotation_colab` (drafts), `02_train_colab` (train and evaluate), `03_eval_predict_all_models` (re-score all runs, paragraph test), `04_urdu_check_v1`, `05_train_v4_colab` (final model).
 
 ## G4. Mistakes we made and how we fixed them (good presentation material)
 
@@ -507,8 +512,8 @@ Notebooks: `01_preannotation_colab` (drafts), `02_train_colab` (train and evalua
 - **Is your test set truly unseen?** It was never trained on, but we studied its error categories, so it is not fully unseen; no test text was added to data and no label edited. The hidden benchmark is the clean measure.
 - **Where did the phone and CNIC data come from?** Randomly generated by us; no real person. Measured on a separate synthetic test with unseen formats and decoys.
 - **Why is ORGANIZATION so low?** Few human labels, and the type overlaps with GOVERNMENT_BODY and POLITICAL_PARTY; unreliable automatic labels had to be masked.
-- **Why did your improvements not help?** They changed the type of error (fewer missed, more spurious) but not the total; the limit is human label volume, not model size.
-- **How did you choose the final model?** A rule fixed before re-scoring: pooled micro F1, then macro F1 over 20 labels, then precision-recall balance.
-- **Did an AI do your labelling?** An AI assistant drafted first-pass corrections for the 400 and 100 gold sentences and labelled 200 extra training sentences. Every gold test sentence was reviewed by a human; the 200 extra training sentences were not, and we disclose it.
+- **Why did your improvements not help?** The first two rounds (synthetic data, masking) changed the type of error but not the total. The one thing that helped, a little, was more human-verified labels (v4): the limit is human label volume, not model size.
+- **How did you choose the final model?** Internal gold favoured v4 slightly; the organisers' sample favoured v1 clearly (0.979 vs 0.958). We submit v1.
+- **Did an AI do your labelling?** An AI assistant drafted first-pass corrections for the 400 and 100 gold sentences, the 400 batch-3 sentences and labelled 200 extra training sentences. Every gold test sentence and the 264 batch-3 training sentences were reviewed by a human; the 200 extra training sentences and the 136 unreviewed batch-3 sentences were not used as human data, and we disclose it.
 - **What about Urdu?** Zero-shot sanity check found 21 of 27 expected entities; not trained, not a benchmark; a proper Urdu round is the next step.
 - **What would you do with another week?** Human-verify more ORGANIZATION, GOVERNMENT_BODY, LAW_ACT and LANDMARK sentences; Urdu fine-tuning round; several seeds to shrink noise; adapt the output to the benchmark format.
