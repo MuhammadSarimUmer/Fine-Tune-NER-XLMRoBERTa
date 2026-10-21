@@ -34,7 +34,7 @@ TechFest NER Challenge | NEDUET "Dory's Data Dive" | Round 2
 | | |
 |---|---|
 | **Task** | Token classification: tag every word with one of 41 BIO tags (20 entity types x B-/I- plus O) |
-| **Final model (deployed)** | **v1** — `xlm-roberta-base`, 4 epochs, Colab T4 (`outputs/xlmr_base/best`; v4 kept as experiment) |
+| **Final model** | **v1** — `xlm-roberta-base`, 4 epochs, Colab T4 (`outputs/xlmr_base/best`; v4 kept as experiment) |
 | **Data** | 15,390 clean real sentences + 5,390 synthetic (v1 training set) |
 | **Labels** | automatic drafts (regex + gazetteers + spaCy), bulk-fixed rules, **500 human-verified gold test** (+ 264 batch-3 for v4 only) |
 | **Score (internal gold, v1)** | **P 0.806 / R 0.822 / F1 0.814** on 764 entities |
