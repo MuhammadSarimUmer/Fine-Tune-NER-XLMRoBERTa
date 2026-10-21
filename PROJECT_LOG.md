@@ -469,3 +469,25 @@ Same Step-27 rule, same pooled sets (test + extra_test, 764 entities incl. patte
 
 ## Step 40 - student_pack cleanup for USB / lab
 Removed from `student_pack_techfest/student_pack/`: duplicate v4 weights `xlmr_base(not-thisone)/`, practice outputs `my_submission*.jsonl`, `__pycache__`. Kept: `make_submission.py`, `xlmr_base/best` (v1), organiser samples, `optional_self_check`, docs, `runfiles.txt`.
+
+## Step 41 - Why v4 underperformed v1 on submission (and why v1 stays final)
+
+**Context.** Step 36 chose v4 on our internal pooled gold (micro F1 0.826 vs 0.814). Steps 38–39 scored v1 and v4 with the organisers' `optional_self_check/score.py` on the 80-sentence sample (239 entities, exact character offsets). v1 won clearly; deployment is v1 in `student_pack_techfest/student_pack/xlmr_base/best`.
+
+**v4 did not "fail" on our gold.** The +0.012 micro F1 gap is inside the roughly ±0.02 noise band but directionally real: v4 recall 0.851 vs v1 0.822, with gains on LANDMARK_FACILITY, ORGANIZATION, and LAW_ACT on internal test. Batch-3 human labels helped for that evaluation.
+
+**Why v4 lost on the sample (0.958 vs v1 0.979).**
+
+1. **Strict scoring penalises extra spans.** Each spurious entity is a full false positive. v4: 11 FP and 9 FN; v1: 6 FP and 4 FN.
+2. **Recall-heavy training (v3/v4 recipe).** Masking unlabelled names, 6 epochs, and batch-3 sentences rich in weak types teach the model to tag ORG/CITY/LANDMARK/DATE more often. On 73 of 80 sample sentences v1 and v4 agree; most disagreements are v4-only wrong tags.
+3. **Concrete diff examples:** spurious CITY on a sports headline; extra DATE on an Eid sentence; PERSON+CITY on "Higher Education Commission"; ORG "Jazz" in a headline.
+4. **Benchmark style.** The sample is relatively clean and short; our `extra_test` is noisier. v4 fits the latter; v1 is tighter (4 epochs, no batch-3 in v1 weights).
+
+**Why v1 is still the best choice for submission.**
+
+- The sample is the only organiser-provided proxy for lab scoring (same metric as the hidden benchmark); v1 wins there by a clear margin, not by one or two entities.
+- Better precision/recall balance for exact-match JSONL (fewer spurious spans).
+- Simpler to explain: first full fine-tune, 4 epochs, no masking or batch-3 in the weights.
+- v4 stays in the report as an experiment (`trained_reports/v4_xlmr_base/`); swap via `NER_MODEL_DIR` only if a future check justified it.
+
+**Terminology.** "v1" means our first fine-tuned XLM-RoBERTa-base run, not the untrained pretrained checkpoint. Full prose: `PROJECT_EXPLAINED.md` section **F7.1**.

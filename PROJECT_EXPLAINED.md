@@ -435,6 +435,41 @@ Internal rule on four models: v4 ranks first on pooled gold (micro 0.826, macro 
 
 **Paragraph test.** All 20 types in one long paragraph: 50 of 54 predicted entities identical across v1, v2, v3. Differences: only v1 found "Dawn"; v2 cut "Anwaar-ul-Haq Kakar"; v1 called "Karachi Press Club" MEDIA_OUTLET (v2/v3 said LANDMARK_FACILITY, correct); all three cut "Bilawal Bhutto Zardari" to two words. A sanity check, not a score.
 
+## F7.1 Why v4 looked worse than v1 on the submission check (and why v1 is still the best choice)
+
+**First clarify the names.** All four runs fine-tune the same **XLM-RoBERTa-base** checkpoint. **v1** means our *first* full training run (4 epochs on the first dataset recipe), not an untrained “base” model. **v4** is the heaviest recipe: everything in v3 (masking of unlabelled names, 6 epochs, extra synthetic data) plus **264 human-verified batch-3 sentences** aimed at weak types.
+
+**v4 did not “fail” on our own tests.** On pooled human gold (764 entities, same metric as the report), v4 micro F1 **0.826** vs v1 **0.814** (+0.012). That is inside the ~0.02 noise we expect from small test sets, but v4 is consistently a bit higher on both `test` and `extra_test`, and it improves the labels we targeted (LANDMARK_FACILITY, ORGANIZATION, LAW_ACT). So the extra annotation and training were not wasted for *our* evaluation.
+
+**v4 did lose on the organisers’ sample** — the check that matters for the lab file. Same `make_submission.py`, same strict rule (exact `start`, `end`, `label`), 80 sentences / 239 entities:
+
+| | v1 | v4 |
+|---|---|---|
+| Micro F1 | **0.979** | 0.958 |
+| False positives (extra wrong spans) | 6 | 11 |
+| False negatives (missed gold) | 4 | 9 |
+
+73 of 80 sentences had **identical** predictions. v4’s extra mistakes were mostly **spurious entities**: tagging an extra CITY, DATE, ORGANIZATION or PERSON where the gold answer had none. That pattern matches how v4 was trained:
+
+1. **Higher recall, lower precision.** v4’s pooled recall on internal gold is **0.851** vs v1 **0.822**; precision **0.803** vs **0.806**. The lab scorer punishes every extra span as a false positive, so a recall-heavy model can score *lower* on a clean, short benchmark even when it finds more on messy news text.
+
+2. **Round 2 masking (v3/v4).** Masking capitalised tokens that might be missed organisations teaches the model not to leave those words as plain `O`. That reduces “missed entity” errors on silver data but encourages ** guessing** entities where the annotator would leave the span unlabelled.
+
+3. **Batch-3 labels (v4 only).** We deliberately added sentences rich in ORGANIZATION, LAW_ACT, LANDMARK, etc. The model learns to tag those types **more often**. On the sample, that showed up as extra CITY/ORG/PERSON spans (e.g. “Karachi” as CITY when gold wanted only an EVENT, “Jazz” as ORGANIZATION in a headline).
+
+4. **Six epochs vs four.** v4 trained longer on noisier silver; v1 stopped earlier and stayed slightly **tighter** — a common trade-off when labels are imperfect.
+
+5. **Benchmark style.** The sample sentences are relatively clean and short; our `extra_test` is deliberately hard and noisy. v4 is tuned for the latter; v1 generalises better to the former.
+
+**Why v1 is still the best choice for submission**
+
+- The **hidden lab benchmark uses the same scoring** as the sample (character offsets, exact labels). The sample is the only organiser-provided proxy we have; v1 wins there by a clear margin (0.979 vs 0.958), not by noise on two entities.
+- v1 is **simpler to defend**: first dataset, 4 epochs, no batch-3 mix-in — fewer moving parts if judges ask what changed between runs.
+- We **still report v4 honestly** in the report as an experiment: more human labels helped weak types on internal gold but hurt precision on the submission-style check.
+- **Fallback:** v4 weights remain in `trained_reports/v4_xlmr_base/` and can be swapped via `NER_MODEL_DIR` if a future check suggested otherwise; for TechFest we ship **v1** in `student_pack_techfest/student_pack/xlmr_base/best`.
+
+**One-line summary for judges:** v4 traded precision for recall on noisy training targets; v1 is the better fit for strict exact-match submission scoring.
+
 ---
 
 # Part G - Prediction, Urdu, tools, mistakes
@@ -464,7 +499,7 @@ Caveats: 27 entities written by us, not checked by a native annotator, no Urdu t
 | Google Drive | storing models | Colab storage is erased after each session |
 | matplotlib + reportlab | charts and PDF | `scripts/make_report_pdf.py` rebuilds the report from saved metrics |
 
-Notebooks: `01_preannotation_colab` (drafts), `02_train_colab` (train and evaluate), `03_eval_predict_all_models` (re-score all runs, paragraph test), `04_urdu_check_v1`, `05_train_v4_colab` (final model).
+Notebooks: `01_preannotation_colab` (drafts), `02_train_colab` (train and evaluate), `03_eval_predict_all_models` (re-score all runs, paragraph test), `04_urdu_check_v1`, `05_train_v4_colab` (optional v4 experiment).
 
 ## G4. Mistakes we made and how we fixed them (good presentation material)
 
