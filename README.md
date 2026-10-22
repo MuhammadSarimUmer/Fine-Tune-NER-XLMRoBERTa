@@ -20,7 +20,8 @@ TechFest NER Challenge | NEDUET "Dory's Data Dive" | Round 2
 ![F1](https://img.shields.io/badge/pooled%20F1-0.814-2E9E5B?style=flat-square)
 ![Precision](https://img.shields.io/badge/precision-0.806-0F8B8D?style=flat-square)
 ![Recall](https://img.shields.io/badge/recall-0.822-2F6FBA?style=flat-square)
-![Sample](https://img.shields.io/badge/organiser%20sample%20F1-0.979-2E9E5B?style=flat-square)
+![Sample](https://img.shields.io/badge/practice%20sample%20F1-0.979-2E9E5B?style=flat-square)
+![Teacher](https://img.shields.io/badge/teacher%20benchmark%20micro%20F1-0.938-2E9E5B?style=flat-square)
 ![Labels](https://img.shields.io/badge/entity%20types-20-E07A1F?style=flat-square)
 ![Leakage](https://img.shields.io/badge/leakage%20checks-passed-2E9E5B?style=flat-square)
 ![Phone/CNIC](https://img.shields.io/badge/phone%20%26%20CNIC-synthetic%20only-C8423B?style=flat-square)
@@ -38,7 +39,8 @@ TechFest NER Challenge | NEDUET "Dory's Data Dive" | Round 2
 | **Data** | 15,390 clean real sentences + 5,390 synthetic (v1 training set) |
 | **Labels** | automatic drafts (regex + gazetteers + spaCy), bulk-fixed rules, **500 human-verified gold test** (+ 264 batch-3 for v4 only) |
 | **Score (internal gold, v1)** | **P 0.806 / R 0.822 / F1 0.814** on 764 entities |
-| **Score (organisers' sample, v1)** | **micro F1 0.979** (80 sentences; used to pick the submission model) |
+| **Score (practice sample, v1)** | **micro F1 0.979** (80 sentences; used to pick the submission model) |
+| **Score (teacher release benchmark, v1)** | **P 0.938 / R 0.939 / micro F1 0.938**, **macro F1 0.936** (820 sentences, 2,381 entities) |
 | **Extra** | zero-shot Urdu check (done with v1): 21 of 27 expected entities found (tiny sample) |
 
 **Full report:** [`NER_Final_Report.pdf`](NER_Final_Report.pdf)  |  **Every step explained in depth:** [`PROJECT_EXPLAINED.md`](PROJECT_EXPLAINED.md)  |  **Dated decision log:** [`PROJECT_LOG.md`](PROJECT_LOG.md)
@@ -80,6 +82,50 @@ Prime Minister Shehbaz Sharif met Imran Khan of PTI in Lahore on 5 March 2024; c
 | Pattern test (synthetic): ID_NUMBER | 188 | 84 | 0.848 | 1.000 | 0.918 |
 
 14 of the 20 types reach F1 ≥ 0.80 on internal gold (v1). Weak types: `ORGANIZATION` (0.39), `LAW_ACT` (0.45), `LANDMARK_FACILITY` (0.56).
+
+### Teacher release benchmark (final submission)
+
+After the event, the course released **`real_answer_key.jsonl`** (gold entities with character offsets). We scored our hand-in file **`submission.jsonl`** (v1, produced by `make_submission.py`) with the same strict rule as the TechFest pack: an entity is correct only if **`start`**, **`end`**, and **`label`** all match exactly. Ranking metric: **micro F1** (pool all entities); **macro F1** averages the 20 per-label F1 scores equally.
+
+| | Sentences | Gold entities | Precision | Recall | Micro F1 | Macro F1 |
+|---|---|---|---|---|---|---|
+| **Teacher benchmark (v1)** | 820 | 2,381 | **0.938** | **0.939** | **0.938** | **0.936** |
+
+All 820 sentence IDs are present in the submission (no missing lines).
+
+**Per-label F1 (teacher set)** — same scorer as above:
+
+| Label | P | R | F1 | support |
+|---|---|---|---|---|
+| POLITICAL_PARTY | 1.000 | 1.000 | **1.000** | 73 |
+| PERCENT | 1.000 | 1.000 | **1.000** | 104 |
+| ID_NUMBER | 1.000 | 1.000 | **1.000** | 60 |
+| TIME | 0.971 | 0.990 | 0.980 | 101 |
+| PERSON | 0.979 | 0.976 | 0.977 | 286 |
+| PHONE_NUMBER | 0.974 | 1.000 | 0.987 | 74 |
+| SPORTS_TEAM | 0.988 | 0.963 | 0.975 | 82 |
+| MONEY | 0.984 | 0.969 | 0.977 | 131 |
+| CITY | 0.893 | 0.963 | 0.927 | 243 |
+| DATE | 0.870 | 0.981 | 0.922 | 314 |
+| LANDMARK_FACILITY | 0.894 | 0.933 | 0.913 | 90 |
+| COUNTRY | 0.883 | 0.932 | 0.907 | 73 |
+| GOVERNMENT_BODY | 0.951 | 0.856 | 0.901 | 202 |
+| ORGANIZATION | 0.939 | 0.838 | 0.886 | 111 |
+| MEDIA_OUTLET | 0.970 | 0.929 | 0.949 | 70 |
+| EVENT | 0.987 | 0.938 | 0.962 | 80 |
+| COURT_LEGAL_BODY | 1.000 | 0.927 | 0.962 | 82 |
+| EDUCATIONAL_INSTITUTION | 1.000 | 0.923 | 0.960 | 65 |
+| PROVINCE_REGION | 0.851 | 0.722 | **0.781** | 79 |
+| LAW_ACT | 0.767 | 0.754 | **0.760** | 61 |
+
+On this benchmark, **micro and macro F1 are both about 94%** (0.938 vs 0.936) because no label collapses to near-zero F1. The main gaps are **`LAW_ACT`** and **`PROVINCE_REGION`** (span or type confusion); **`ORGANIZATION`** recall (0.838) is lower than its precision.
+
+Reproduce locally (answer key is for scoring only — not used in training):
+
+```bash
+cd student_pack_techfest/student_pack
+python optional_self_check/score.py --gold real_answer_key.jsonl --pred submission.jsonl
+```
 
 ### Four runs, one honest conclusion
 
@@ -182,7 +228,7 @@ python make_submission.py --input sample_benchmark.jsonl --output my_submission.
 python optional_self_check/score.py --gold optional_self_check/sample_answer_key.jsonl --pred my_submission.jsonl
 ```
 
-On the day, use the real benchmark file as `--input` and hand in the file it writes. The answer key is for scoring only, never for training.
+On the day, use the real benchmark file as `--input` and hand in the file it writes. **`real_answer_key.jsonl`** (teacher gold) and **`submission.jsonl`** (our output) are for scoring only — never for training or hyperparameter tuning.
 
 ## Known limitations
 

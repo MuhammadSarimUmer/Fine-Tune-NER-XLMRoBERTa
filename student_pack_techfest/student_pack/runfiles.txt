@@ -6,4 +6,4 @@ python make_submission.py --input sample_benchmark.jsonl --output my_submission.
 python optional_self_check/score.py --gold optional_self_check/sample_answer_key.jsonl --pred my_submission.jsonl
 
 # Tomorrow (writes submission.jsonl — hand this in)
-python make_submission.py --input THEIR_BENCHMARK.jsonl --output submission.jsonl
+python make_submission.py --input real_answer_key.jsonl. --output submission.jsonl
